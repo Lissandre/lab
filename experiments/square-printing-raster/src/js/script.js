@@ -13,8 +13,6 @@ window.addEventListener('resize', ()=>{
   tempcanvas.width = window.innerWidth
   tempcanvas.height = window.innerHeight
   tempctx.clearRect(0,0,tempcanvas.width, tempcanvas.height)
-  // drawImage()
-  //draw()
 })
 /**
  * CONTEXT
@@ -37,7 +35,7 @@ const tempctx = tempcanvas.getContext('2d')
 //   tempctx.drawImage(image, 0, 0)
 // }
 // Prefer camera resolution nearest to 1280x720.
-let constraints = { audio: false, video: { width: 1920, height: 1080 } }; 
+let constraints = { audio: false, video: { width: window.innerWidth, height: window.innerHeight } }; 
 
 navigator.mediaDevices.getUserMedia(constraints)
 .then(function(mediaStream) {
@@ -50,8 +48,8 @@ navigator.mediaDevices.getUserMedia(constraints)
 .catch(function(err) { console.log(err.name + ": " + err.message); }); // always check for errors at the end
 function printDraw() {
   const imageDataSource = tempctx.getImageData(0, 0, video.width, video.height)
-  let h = 0
-  let w = 0
+  let h = -8
+  let w = -10
   // ctx.globalCompositeOperation = 'multiply'
   for (let i = 0; i < imageDataSource.data.length; i+=44 ){
     let rMoyenne = Math.round(((imageDataSource.data[i] + imageDataSource.data[i+8] + imageDataSource.data[i+16] + imageDataSource.data[i+24] + imageDataSource.data[i+32] + imageDataSource.data[i+40])/6)/255)*255
@@ -61,12 +59,12 @@ function printDraw() {
     ctx.strokeStyle = `rgb(${rMoyenne}, ${gMoyenne}, ${bMoyenne})`
     ctx.lineWidth = 3
     // console.log((i+43)%(image.width*4))
-    if(((i+43)%(video.width*4))<=43){
+    if(((i+44)%(video.width*4))<=44){
       w = 0
-      h += 10
+      h += 9
       i += imageDataSource.data.length/video.height*5
     }else{
-      w += 10
+      w += 12
     }
     ctx.strokeRect(w+Math.round(Math.random()*4-2), h+Math.round(Math.random()*4-2), 20, 20)
   }
